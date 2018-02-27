@@ -100,6 +100,24 @@ namespace boost_helper
         }
 
         /**
+         * Add a string element to this node without key.
+         */
+        void add(const std::string& value)
+        {
+            ptree element;
+            element.put_value(value);
+            data_->push_back(make_pair("", element));
+        }
+
+        /**
+         * Add a child node to this node without key.
+         */
+        void add(const json& value)
+        {
+            data_->push_back(make_pair("", *value.data_));
+        }
+
+        /**
          * Get string value of this node.
          */
         std::string val() const

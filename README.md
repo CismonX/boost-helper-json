@@ -49,6 +49,9 @@ int main()
         name.second = "Nobody";
     }
 
+    // Add a child string to a JSON node without key.
+    response["data"]["names"].add("Somebody");
+
     // Print a JSON node.
     std::cout << response.to_string() << std::endl;
 }
