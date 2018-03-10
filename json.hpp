@@ -20,7 +20,6 @@ namespace boost_helper
         bool is_root_ = false;
 
     public:
-
         /// Trying to modify the value of root node of JSON.
         class root_modification_exception : public std::exception {};
 
@@ -57,7 +56,7 @@ namespace boost_helper
          */
         explicit json(const std::string& json_str) : is_root_(true)
         {
-            data_ = new boost::property_tree::ptree;
+            data_ = new ptree;
             std::istringstream stream(json_str);
             read_json(stream, *data_);
         }
@@ -69,6 +68,7 @@ namespace boost_helper
 
         /**
          * Assign the value of this node with another node.
+         * @throws root_modification_exception : thrown when trying to modify a non-root node.
          */
         json& operator=(const json& other)
         {
@@ -80,6 +80,7 @@ namespace boost_helper
 
         /**
          * Assign the value of this node with a string.
+         * @throws root_modification_exception : thrown when trying to modify a non-root node.
          */
         json& operator=(const std::string& value)
         {
@@ -87,6 +88,22 @@ namespace boost_helper
                 throw root_modification_exception();
             data_->put_value(value);
             return *this;
+        }
+
+        /**
+         * Whether this node is equal to another node.
+         */
+        bool operator==(const json& other) const
+        {
+            return *data_ == *other.data_;
+        }
+
+        /**
+         * Whether this node is not equal to another node.
+         */
+        bool operator!=(const json& other) const
+        {
+            return *data_ != *other.data_;
         }
 
         /**
@@ -136,10 +153,10 @@ namespace boost_helper
         /**
          * Print this JSON node to a string.
          */
-        std::string to_string() const
+        std::string to_string(bool pretty = false) const
         {
             std::ostringstream stream;
-            write_json(stream, *data_, false);
+            write_json(stream, *data_, pretty);
             return stream.str();
         }
 
